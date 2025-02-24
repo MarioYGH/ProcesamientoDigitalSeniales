@@ -1,6 +1,6 @@
 import numpy as np
 
-# Definir la matriz A (puedes cambiar los valores para probar otros casos)
+# Definir la matriz A
 A = np.array([[2, -1, 0], 
               [1, 3, 1], 
               [0, -1, 2]])
@@ -27,7 +27,7 @@ if det_A != 0:
 else:
     A_inv = None
     invertible = False
-    
+
 # Aplicar la transformación T(x) = Ax
 T_v1 = A @ v1
 T_v2 = A @ v2
@@ -40,31 +40,31 @@ additivity_check = np.allclose(T_v1_v2, T_v1 + T_v2)
 # Verificar homogeneidad: T(c * v1) == c * T(v1)
 homogeneity_check = np.allclose(T_c_v1, c * T_v1)
 
-# Mostrar resultados
-print("T(v1) =", T_v1)
-print("T(v2) =", T_v2)
-print("T(v1 + v2) =", T_v1_v2)
-print("T(v1) + T(v2) =", T_v1 + T_v2)
-print("Aditividad verificada:", additivity_check)
+# Mostrar resultados con formato bonito
+print("\n===== Matriz A y Propiedades =====")
+print("Matriz A:\n", A)
+print(f"Determinante de A: {det_A:.4f}")
+print(f"Traza de A: {trace_A:.4f}")
+print("\nEigenvalores de A:", eigenvalues)
+print("Eigenvectores de A:\n", eigenvectors)
+print("\n¿La matriz A tiene inversa?:", "Sí" if invertible else "No")
 
-print("\nT(c * v1) =", T_c_v1)
-print("c * T(v1) =", c * T_v1)
-print("Homogeneidad verificada:", homogeneity_check)
+if invertible:
+    print("\nInversa de A:\n", A_inv)
+
+print("\n===== Transformaciones Lineales =====")
+print(f"T(v1) = {T_v1}")
+print(f"T(v2) = {T_v2}")
+print(f"T(v1 + v2) = {T_v1_v2}")
+print(f"T(v1) + T(v2) = {T_v1 + T_v2}")
+print(f"Aditividad verificada: {'Sí' if additivity_check else 'No'}")
+
+print(f"\nT(c * v1) = {T_c_v1}")
+print(f"c * T(v1) = {c * T_v1}")
+print(f"Homogeneidad verificada: {'Sí' if homogeneity_check else 'No'}")
 
 # Verificación final
 if additivity_check and homogeneity_check:
-    print("\nLa transformación es lineal ✅")
+    print("\n La transformación es lineal.")
 else:
-    print("\nLa transformación NO es lineal ❌")
-
-
-# Mostrar resultados
-print("Matriz A:\n", A)
-print("Determinante de A:", det_A)
-print("Traza de A:", trace_A)
-print("Eigenvalores de A:", eigenvalues)
-print("Eigenvectores de A:\n", eigenvectors)
-print("¿La matriz A tiene inversa?:", invertible)
-
-if invertible:
-    print("Inversa de A:\n", A_inv)
+    print("\n La transformación NO es lineal.")
