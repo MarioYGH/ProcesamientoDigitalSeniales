@@ -48,3 +48,12 @@ plt.title("Espectro de frecuencia antes y después del filtrado")
 plt.legend()
 plt.grid()
 plt.show()
+
+# Pregunta a: 
+print("¿Cómo afecta la frecuencia de corte (fc) a la señal filtrada? Si aumentas la frecuencia de corte (fc), el filtro pasa-bajas permitirá el paso de señales de mayor frecuencia, atenuando menos las altas frecuencias. Si disminuyes fc, el filtro bloqueará más componentes de alta frecuencia, dejando pasar principalmente las más bajas.")
+
+# Pregunta b: 
+print("¿Qué ocurre si aumentas o disminuyes la frecuencia de muestreo (fs)? Si aumentas la frecuencia de muestreo (fs), puedes representar mejor señales de alta frecuencia sin aliasing y el filtro será más preciso. Si fs disminuye, puedes perder información de señales de alta frecuencia y puede aparecer aliasing.")
+
+# Pregunta c: 
+print("¿Cómo se compara este filtro con un filtro pasa-bajas ideal en el dominio de la frecuencia? Este filtro pasa-bajas atenúa gradualmente las señales de alta frecuencia debido a su comportamiento de primer orden. Un filtro ideal eliminaría completamente todas las frecuencias por encima de la frecuencia de corte, mientras que este filtro tiene una transición más suave.")
