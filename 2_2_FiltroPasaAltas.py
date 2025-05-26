@@ -1,3 +1,25 @@
+# Practica 6: Filtro Pasa Altas en Diferencias Finitas
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+# Objetivo: Implementar un filtro pasa-altas en python utilizando el metodo de 
+# diferencias finitas. Analizar la respuesta del filtro y su comportamiento  
+# en el dominio de la frecuencia  
+
+# a) Sustituye en la ecuación diferencial y despeja para y[n] para asi obtener la ecua-ción recursiva para implementar en Python 
+# Considerando la señal de entrada: 
+# x = sin(360 deg * 5t) + 1/2 * sin(360 deg * 50t) 
+# b) Implementa un filtro pasa baja (ecuación recursiva obtenida) en la señal de en-trada, considere los siguientes parámetros 
+# a. Frecuencia de corte f_{c} = 10hz 
+# b. Frecuencia de muestreo f_{s} = 1000hz 
+# c. Intervalo de tiempo Delta*t = 1/f_{s} 
+# c) Visualice los resultados 
+# a. Graficar la señal de entrada y la señal filtrada en el dominio del tiempo 
+# d) Análisis en el dominio de la frecuencia 
+# a. Calcular la transformada de Fourier de la señal de entrada y la señal fil-trada. 
+# b. Graficar la magnitud del espectro de ambas señales. 
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 
