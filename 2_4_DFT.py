@@ -1,3 +1,11 @@
+# Practica 8: Transformada discreta de Fourier 
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+# Objetivo: Implementar la Transformada Discreta de Fourier (DFT) desde cero utilizando NumPy, sin recurrir a
+# funciones especializadas como numpy.fft.fft. Analizar su aplicación en señales discretas y comparar los
+# resultados con la implementación estándar.
+
 import numpy as np
 import customtkinter as ctk
 import matplotlib.pyplot as plt
