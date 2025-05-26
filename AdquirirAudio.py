@@ -1,3 +1,6 @@
+# Este código adquiere el 3 palabras, por audio, saca su frecuencia y la guarda y después se debe ingresar una cuarta palabra para comparar si es 
+# igual a una de las ya antes guardadas, en la funcion def mostrar resultado, se puede ajustar el umbral para un mejor resultado
+
 import tkinter as tk
 from tkinter import messagebox
 import sounddevice as sd
