@@ -1,176 +1,121 @@
-import tkinter as tk
-from tkinter import messagebox
-import sounddevice as sd
 import numpy as np
-from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+import customtkinter as ctk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from typing import List, Tuple
 
-# Configuración global
-DURATION = 1.5  
-FS = 44100
-CHANNELS = 1
-DTYPE = 'float64'
+# === Señales y procesamiento ===
 
-class AudioProcessor:
-    def __init__(self):
-        self.audios: List[np.ndarray] = []       # Señales originales
-        self.fft_data: List[Tuple[np.ndarray, np.ndarray]] = []  # (freq, fft)
-        
-    def grabar_audio(self) -> np.ndarray:
-        """Graba audio con la configuración global"""
-        audio = sd.rec(int(DURATION * FS), samplerate=FS, 
-                       channels=CHANNELS, dtype=DTYPE)
-        sd.wait()
-        return audio.flatten()
-    
-    @staticmethod
-    def calcular_fft(audio: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        """Calcula la FFT de una señal de audio"""
-        N = len(audio)
-        freq = np.fft.fftfreq(N, d=1/FS)
-        fft = np.abs(np.fft.fft(audio))
-        return freq[:N//2], fft[:N//2]
-    
-    def comparar_fft(self, fft4: np.ndarray) -> Tuple[int, float]:
-        """Compara una FFT con las almacenadas usando similitud de coseno"""
-        similarities = []
-        for i, (_, fft_ref) in enumerate(self.fft_data):
-            # Normalización para evitar diferencias por volumen
-            fft4_norm = fft4 / np.linalg.norm(fft4)
-            fft_ref_norm = fft_ref / np.linalg.norm(fft_ref)
-            sim = np.dot(fft4_norm, fft_ref_norm)
-            similarities.append(sim)
-        
-        max_sim = max(similarities) if similarities else 0
-        index = similarities.index(max_sim) if similarities else -1
-        return index, max_sim
-    
-class AudioApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Reconocimiento de Palabras con FFT")
-        self.processor = AudioProcessor()
-        
-        self.setup_ui()
-        
-    def setup_ui(self):
-        """Configura los elementos de la interfaz gráfica"""
-        self.frame_botones = tk.Frame(self.root)
-        self.frame_botones.pack(pady=10)
-        
-        self.frame_graficos = tk.Frame(self.root)
-        self.frame_graficos.pack()
-        
-        # Botones para grabar
-        for i in range(4):
-            btn = tk.Button(
-                self.frame_botones, 
-                text=f"Grabar palabra {i + 1}", 
-                command=lambda i=i: self.grabar_y_procesar(i),
-                width=15
-            )
-            btn.grid(row=0, column=i, padx=5)
-            
-        # Botón para limpiar
-        btn_clear = tk.Button(
-            self.frame_botones,
-            text="Limpiar todo",
-            command=self.limpiar_datos,
-            width=15
-        )
-        btn_clear.grid(row=1, column=0, columnspan=4, pady=5)
-        
-    def grabar_y_procesar(self, palabra_n: int):
-        """Maneja el proceso de grabación y procesamiento"""
-        try:
-            if palabra_n < 3:
-                self.mostrar_mensaje("Grabando", f"Preparado para grabar palabra {palabra_n + 1}...")
-                audio = self.processor.grabar_audio()
-                self.processor.audios.append(audio)
-                
-                freq, fft = self.processor.calcular_fft(audio)
-                self.processor.fft_data.append((freq, fft))
-                
-                self.mostrar_grafico_tiempo(audio, f"Palabra {palabra_n + 1} - Tiempo")
-                self.mostrar_grafico_fft(freq, fft, f"Palabra {palabra_n + 1} - FFT")
-                
-                self.mostrar_mensaje("Éxito", f"Palabra {palabra_n + 1} guardada.")
-                
-            elif palabra_n == 3:
-                if len(self.processor.fft_data) < 3:
-                    self.mostrar_mensaje("Error", "Primero grabe las 3 palabras de referencia")
-                    return
-                    
-                self.mostrar_mensaje("Grabando", "Preparado para grabar palabra 4 (a comparar)...")
-                audio4 = self.processor.grabar_audio()
-                
-                freq4, fft4 = self.processor.calcular_fft(audio4)
-                self.mostrar_grafico_tiempo(audio4, "Palabra 4 - Tiempo")
-                self.mostrar_grafico_fft(freq4, fft4, "Palabra 4 - FFT")
-                
-                index, sim = self.processor.comparar_fft(fft4)
-                self.mostrar_resultado(index, sim)
-                
-        except Exception as e:
-            self.mostrar_mensaje("Error", f"Ocurrió un error: {str(e)}")
-    
-    def mostrar_grafico_tiempo(self, audio: np.ndarray, title: str):
-        """Muestra la gráfica en el dominio del tiempo"""
-        self.limpiar_graficos()
-        fig = Figure(figsize=(6, 3), dpi=100)
-        plot = fig.add_subplot(111)
-        tiempo = np.linspace(0, DURATION, len(audio))
-        plot.plot(tiempo, audio, color='blue')
-        plot.set_title(title)
-        plot.set_xlabel("Tiempo (s)")
-        plot.set_ylabel("Amplitud")
-        canvas = FigureCanvasTkAgg(fig, master=self.frame_graficos)
-        canvas.draw()
-        canvas.get_tk_widget().pack()
-    
-    def mostrar_grafico_fft(self, freq: np.ndarray, fft: np.ndarray, title: str):
-        """Muestra la gráfica en el dominio de la frecuencia"""
-        fig = Figure(figsize=(6, 3), dpi=100)
-        plot = fig.add_subplot(111)
-        plot.plot(freq, fft, color='green')
-        plot.set_title(title)
-        plot.set_xlabel("Frecuencia (Hz)")
-        plot.set_ylabel("Amplitud")
-        plot.set_xlim(0, 5000)  # Limitamos a frecuencias relevantes del habla
-        canvas = FigureCanvasTkAgg(fig, master=self.frame_graficos)
-        canvas.draw()
-        canvas.get_tk_widget().pack()
-    
-    def mostrar_resultado(self, index: int, similitud: float):
-        """Muestra el resultado de la comparación"""
-        if similitud > 0.85:  # Umbral ajustable
-            msg = f"La palabra 4 es SIMILAR a la palabra {index + 1} (similitud = {similitud:.2f})"
-        else:
-            msg = f"La palabra 4 es DIFERENTE (máxima similitud = {similitud:.2f})"
-        self.mostrar_mensaje("Resultado", msg)
-    
-    def limpiar_datos(self):
-        """Limpia todos los datos y gráficos"""
-        self.processor.audios.clear()
-        self.processor.fft_data.clear()
-        self.limpiar_graficos()
-        self.mostrar_mensaje("Información", "Datos y gráficos limpiados")
-    
-    def limpiar_graficos(self):
-        """Elimina todos los gráficos mostrados"""
-        for widget in self.frame_graficos.winfo_children():
-            widget.destroy()
-    
-    @staticmethod
-    def mostrar_mensaje(titulo: str, mensaje: str):
-        """Muestra un mensaje en ventana emergente"""
-        messagebox.showinfo(titulo, mensaje)
-        
-def main():
-    root = tk.Tk()
-    app = AudioApp(root)
-    root.mainloop()
+def generate_signals(t):
+    clean_signal = np.sin(2 * np.pi * 10 * t) + 0.5 * np.sin(2 * np.pi * 25 * t)
+    noise = 0.5 * np.random.normal(0, 1, len(t))
+    noisy_signal = clean_signal + noise
+    return clean_signal, noisy_signal
 
-if __name__ == "__main__":
-    main()
+def haar_dwt(signal):
+    A = (signal[::2] + signal[1::2]) / np.sqrt(2)
+    D = (signal[::2] - signal[1::2]) / np.sqrt(2)
+    return A, D
+
+def haar_idwt(A, D):
+    x_even = (A + D) / np.sqrt(2)
+    x_odd  = (A - D) / np.sqrt(2)
+    result = np.empty(x_even.size + x_odd.size)
+    result[0::2], result[1::2] = x_even, x_odd
+    return result
+
+def multi_level_dwt(signal, levels):
+    coeffs = []
+    current = signal
+    for _ in range(levels):
+        A, D = haar_dwt(current)
+        coeffs.append(D)
+        current = A
+    coeffs.append(current)  # última aproximación
+    return coeffs
+
+def reconstruct_with_threshold(coeffs, threshold=0.5):
+    A = coeffs[-1]
+    for D in reversed(coeffs[:-1]):
+        D[np.abs(D) < threshold] = 0
+        A = haar_idwt(A, D)
+    return A
+
+# === Configuración principal ===
+
+np.random.seed(42)
+N = 512
+t = np.linspace(0, 1, N, endpoint=False)
+clean_signal, noisy_signal = generate_signals(t)
+
+# DWT y reconstrucción
+coeffs = multi_level_dwt(noisy_signal, levels=4)
+reconstructed = reconstruct_with_threshold(coeffs.copy(), threshold=0.5)
+approx_final = coeffs[-1]
+error = clean_signal - reconstructed
+
+# === GUI con customtkinter ===
+
+ctk.set_appearance_mode("light")
+app = ctk.CTk()
+app.title("DWT Haar - Visualización Interactiva")
+app.geometry("1100x750")
+
+tabview = ctk.CTkTabview(app)
+tabview.pack(expand=True, fill="both")
+
+# === Tab a) Señal original y aproximación nivel 1 ===
+tab_a = tabview.add("a) Señal vs Aproximación")
+
+fig_a, ax_a = plt.subplots(figsize=(10, 4))
+ax_a.plot(t, noisy_signal, label="Señal con ruido", alpha=0.6)
+ax_a.plot(np.linspace(0, 1, len(coeffs[0])), coeffs[0], label="Aproximación Nivel 1", color='green')
+ax_a.set_title("Señal con Ruido vs Aproximación Nivel 1")
+ax_a.legend()
+ax_a.grid(True)
+
+canvas_a = FigureCanvasTkAgg(fig_a, master=tab_a)
+canvas_a.get_tk_widget().pack(fill="both", expand=True)
+canvas_a.draw()
+
+# === Tab b) Detalles por nivel ===
+tab_b = tabview.add("b) Detalles Wavelet")
+
+fig_b, axs_b = plt.subplots(4, 1, figsize=(10, 8))
+for i in range(4):
+    axs_b[i].plot(coeffs[i])
+    axs_b[i].set_title(f"Detalle Nivel {i+1}")
+    axs_b[i].grid(True)
+
+fig_b.tight_layout()
+canvas_b = FigureCanvasTkAgg(fig_b, master=tab_b)
+canvas_b.get_tk_widget().pack(fill="both", expand=True)
+canvas_b.draw()
+
+# === Tab c) Reconstrucción con umbral ===
+tab_c = tabview.add("c) Reconstrucción")
+
+fig_c, ax_c = plt.subplots(figsize=(10, 4))
+ax_c.plot(t, clean_signal, label="Señal original", alpha=0.4)
+ax_c.plot(t, reconstructed, label="Señal reconstruida (umbral 0.5)", color='red')
+ax_c.set_title("Reconstrucción de Señal con Umbralización")
+ax_c.legend()
+ax_c.grid(True)
+
+canvas_c = FigureCanvasTkAgg(fig_c, master=tab_c)
+canvas_c.get_tk_widget().pack(fill="both", expand=True)
+canvas_c.draw()
+
+# === Tab d) Error de reconstrucción ===
+tab_d = tabview.add("d) Error de Reconstrucción")
+
+fig_d, ax_d = plt.subplots(figsize=(10, 4))
+ax_d.plot(t, error, label="Error (original - reconstruida)", color='black')
+ax_d.set_title("Error de Reconstrucción")
+ax_d.legend()
+ax_d.grid(True)
+
+canvas_d = FigureCanvasTkAgg(fig_d, master=tab_d)
+canvas_d.get_tk_widget().pack(fill="both", expand=True)
+canvas_d.draw()
+
+app.mainloop()
