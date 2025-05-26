@@ -1,3 +1,26 @@
+# Practica 5: Filtro Pasa-Bajas en Diferencias Finitas
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+# Objetivo: Implementar un filtro pasa-bajas en python utilizando el metodo de 
+# diferencias finitas. Analizar la respuesta del filtro y su comportamiento  
+# en el dominio de la frecuencia  
+
+# a) Sustituye en la ecuación diferencial y despeja para y[n] para asi obtener la ecuación recursiva para implementar en Python 
+# Considerando la señal de entrada: 
+# 1 x = sin(360°.5t) + sin(360°-50t) 
+# b) Implementa un filtro pasa baja (ecuación recursiva de arriba) en la señal de entrada, considere 
+# los siguientes parámetros 
+# a. Frecuencia de corte f = 10hz 
+# b. Frecuencia de muestreo f = 1000hz 
+# c. Intervalo de tiempo At = fs 
+# c) Visualice los resultados 
+# a. Graficar la señal de entrada y la señal filtrada en el dominio del tiempo 
+# d) Análisis en el dominio de la frecuencia 
+# a. Calcular la transformada de Fourier de la señal de entrada y la señal filtrada. 
+# b. Graficar la magnitud del espectro de ambas señales.
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.fftpack import fft, fftfreq
