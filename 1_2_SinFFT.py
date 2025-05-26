@@ -1,3 +1,18 @@
+# Practica 1: Ruido y FFT
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+ # Aplica la Transformada de Fourier a una señal y retorna las frecuencias y su magnitud
+ # calculando el módulo complejo explícitamente.
+
+ # Parámetros:
+ #     signal (np.array): La señal de entrada en el dominio del tiempo.
+ #     sample_rate (float): La tasa de muestreo de la señal.
+
+ # Retorna:
+ #     freqs (np.array): Frecuencias positivas.
+ #     magnitudes (np.array): Magnitud de las frecuencias.
+
 import numpy as np
 import matplotlib.pyplot as plt
 
