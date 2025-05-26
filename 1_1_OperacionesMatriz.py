@@ -1,3 +1,11 @@
+# Practica 2: Operaciones con matrices
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+# De la mariz dada A, obtener:
+# Determimante, Traza, Eigenvalores, Eigenvectores, inversa
+# Verificar aditividad y homogeneidad
+
 import numpy as np
 
 # Definir la matriz A
