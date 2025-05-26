@@ -6,6 +6,19 @@
 # funciones especializadas como numpy.fft.fft. Analizar su aplicación en señales discretas y comparar los
 # resultados con la implementación estándar.
 
+# 1. Genera un espectro muestra que sea la combinación lineal de 4 gaussianas, siendo suscaracterísticas
+# Centro Altura Ancho
+# 500 1 30
+# 800 0.6 25
+# 1200 0.3 40
+# 1600 0.8 20
+# 2. Añade un 25% ruido gaussiano con una media y desv. est. de 0 y 0.1 respectivamente al
+# espectro resultante. Debes de obtener algo como la gráfica siguiente.
+# 3. Calcula la DFT de la señal anterior, debes de obtener algo como esto
+# 4. Filtra la señales mayores a 0.025 Hz y reconstruye la señal mediante IDFT, se espera algo como
+# 5. Como métricas de evaluación de tu señal filtrada, calcula el Error Cuadratico Medio de la señal
+# filtrada y de la señal original sin ruido. De igual forma calcula la relación SNR.
+
 import numpy as np
 import customtkinter as ctk
 import matplotlib.pyplot as plt
