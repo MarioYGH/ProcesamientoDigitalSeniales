@@ -1,3 +1,16 @@
+# Practica 7: Aproximación de Series de Fourier con NumPy
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+# Objetivo: Comprender la implementación de series de Fourier para aproximar funciones periódicas utilizando
+# NumPy, calculando manualmente los coeficientes y reconstruyendo la señal.
+
+# a) Defina una función periódica cuadrada f(t) donde sea 1 para t < T/2 y -1 para t >= T/2 para
+# tiempos de integración de 1000 puntos entre 0 y T
+# b) Considere N = 10 para el numero de armónicos
+# c) Calcular los coeficientes mediante el método de trapecio
+# d) Reconstruye la Serie de Fourier
+
 import numpy as np
 import customtkinter as ctk
 import matplotlib.pyplot as plt
