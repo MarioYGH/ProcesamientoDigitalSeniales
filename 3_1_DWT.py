@@ -1,3 +1,17 @@
+# Practica 9: Transformada Wavelet Discreta (DWT) en Python con NumPy.
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+# Objetivo: Implementar manualmente la DWT usando el wavelet de Haar para analizar una señal
+# unidimensional.
+
+# a) Grafique la señal de aproximación (A) y compárela con la señal original
+# b) Extender a múltiples niveles: Modifica el código para aplicar la DWT en cascada (usar A como
+# nueva señal de entrada) y extienda a 4 niveles. Muestre los niveles de detalle en una gráfica
+# c) Investigue como reconstruir la señal y compárela con la original, (HINT: resuelva para 𝑥2𝑘, 𝑥2𝑘+1
+# en cada uno de los 4 niveles solicitados). Use un humbral de 0.5 para eliminar coeficientes
+# pequeños
+
 import numpy as np
 import matplotlib.pyplot as plt
 import customtkinter as ctk
@@ -106,7 +120,7 @@ canvas_c.get_tk_widget().pack(fill="both", expand=True)
 canvas_c.draw()
 
 # === Tab d) Error de reconstrucción ===
-tab_d = tabview.add("d) Error de Reconstrucción")
+tab_d = tabview.add("Error de Reconstrucción")
 
 fig_d, ax_d = plt.subplots(figsize=(10, 4))
 ax_d.plot(t, error, label="Error (original - reconstruida)", color='black')
