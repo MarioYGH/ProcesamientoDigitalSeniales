@@ -1,3 +1,9 @@
+# Practica 4: Retenedor de orden cero
+# Procesamiento Digital de señales
+# Autor: Mario Yahir Garcia Hernandez
+
+# Diseñas una interfaz en la qu ese aplique ZOH de forma varibel a una señal senosidal 
+
 import numpy as np
 import matplotlib.pyplot as plt
 import customtkinter as ctk
@@ -77,4 +83,3 @@ class RetenedorOrden0App(ctk.CTk):
 if __name__ == "__main__":
     app = RetenedorOrden0App()
     app.mainloop()
-
